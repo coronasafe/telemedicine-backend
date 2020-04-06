@@ -2,12 +2,12 @@
 import { Bookshelf } from './Model';
 
 class TempOtp extends Bookshelf.Model {
-  get tableName() {
-    return 'temp_otp';
-  }
+	get tableName() {
+		return 'temp_otp';
+	}
 
-  get hasTimestamps() {
-    return true;
-  }
+	get hasTimestamps() {
+		return true;
+	}
 }
 export default Bookshelf.model('temp_otp', TempOtp);
