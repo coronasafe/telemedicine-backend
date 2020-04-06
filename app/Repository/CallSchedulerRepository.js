@@ -4,8 +4,8 @@ import CallScheduler from '../Models/CallScheduler';
 const pageSize = 8;
 
 export default class CallSchedulerRepository {
-  find(obj) {
-    return CallScheduler.where(obj).fetchAll();
+  find(obj, page) {
+    return CallScheduler.where(obj).fetchPage({ page, pageSize });
   }
 
   findPriority(obj, states, defaultStatus, page) {

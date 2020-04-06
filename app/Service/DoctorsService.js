@@ -63,7 +63,15 @@ export default class DoctorsService {
       states = ['attending_by_doctor', 'closed_by_doctor'];
       filter.doctor_id = obj.parentId;
     }
-    let users = await this.callRequest.findPriority(filter, states, defaultStatus, page);
+    let users = {};
+    if (states.length > 0) {
+      users = await this.callRequest.findPriority(filter, states, defaultStatus, page);
+    } else {
+      filter.status = obj.status;
+      if (obj.type === 'IMA_VOLUNTEER') filter.volunteer_id = obj.parentId;
+      else filter.doctor_id = obj.parentId;
+      users = await this.callRequest.find(filter);
+    }
     const pagination = users.pagination;
     if (users === null) return { message: 'No new Patients with MEDIUM or HIGH priority' };
     users = users.toJSON({ visibility: false });
@@ -142,7 +150,9 @@ export default class DoctorsService {
       obj.attending_by_you = await this.callRequest.count({ status: 'attending_by_volunteer', volunteer_id: parentId });
       obj.closed_by_you = await this.callRequest.count({ status: 'closed_by_volunteer', volunteer_id: parentId });
       obj.total_attended_by_you = await this.callRequest.count({ volunteer_id: parentId });
-      obj.forwarded_by_you_pending = await this.callRequest.count({ status: 'forwarded_to_doctor', volunteer_id: parentId });
+      obj.forwarded_by_you_pending = await this.callRequest.count({
+        status: 'forwarded_to_doctor',
+        volunteer_id: parentId });
       obj.total_completed_by_you = await this.callRequest.count({ completed: true, volunteer_id: parentId });
     } else if (type === 'DOCTOR') {
       obj.attending_by_you = await this.callRequest.count({ status: 'attending_by_doctor', doctor_id: parentId });
