@@ -64,6 +64,7 @@ export default class DoctorsService {
       filter.doctor_id = obj.parentId;
     }
     let users = await this.callRequest.findPriority(filter, states, defaultStatus, page);
+    const pagination = users.pagination;
     if (users === null) return { message: 'No new Patients with MEDIUM or HIGH priority' };
     users = users.toJSON({ visibility: false });
     const patients = [];
@@ -102,7 +103,7 @@ export default class DoctorsService {
         });
       }
     }
-    return { entries: patients, page };
+    return { entries: patients, ...pagination };
   }
 
   async updateScheduler({
