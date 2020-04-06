@@ -92,7 +92,7 @@ export default {
     }),
     consult: Joi.object().keys({
       symptoms: Joi.array(),
-      Suggestion: Joi.string().valid('HOME ISOLATION', 'ADMISSION', 'REFERRAL'),
+      suggestion_text: Joi.string().valid('HOME ISOLATION', 'ADMISSION', 'REFERRAL'),
       category: Joi.string().valid('Category-A', 'Category-B', 'Category-C', 'UNCLASSIFIED'),
       other_symptoms: Joi.string(),
       symptoms_onset_date: Joi.string(),
