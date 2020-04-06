@@ -1,7 +1,19 @@
-install nodejs and npm
-install knex gloabally using npm
-create .env file with the follwing fields
+# Sureksha
 
+Telemedicine backend
+
+## Installation
+
+Use the package manager [npm](https://www.npmjs.com/) to install sureksha.
+Also install nodejs and mysql and also install knex globally.
+
+```bash
+npm install
+```
+
+## .env file format
+
+```.env
 APP_KEY= 
 APP_ENV=
 APP_NAME=
@@ -27,8 +39,11 @@ C_USERNAME= //care staff username
 C_PASSWORD= //care staff password
 
 JWT_SECRET=// jwt secret
+```
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 
-
-npm install and hopefully you are good to go!
-
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
