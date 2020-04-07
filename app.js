@@ -45,14 +45,14 @@ app.use('/api/call', Routes.CallRouter);
  * uncaught exception handling
  */
 process.on('uncaughtException', (reason) => {
-  Logger.error('uncaughtException', new Error(reason));
+	Logger.error('uncaughtException', new Error(reason));
 });
 
 // initalizing global required services and creating server
 Promise.all(Boostrap.intializeServices()).then(() => {
-  app.listen(process.project.app.port, () => {
-    Logger.info('Server Started Successfully');
-  });
+	app.listen(process.project.app.port, () => {
+		Logger.info('Server Started Successfully');
+	});
 }).catch((error) => {
-  Logger.error('BoostrapInitiailizeServices', new Error(error));
+	Logger.error('BoostrapInitiailizeServices', new Error(error));
 });

@@ -66,9 +66,9 @@ export default class DoctorsController extends Controller {
       });
   }
 
-  async fetchRequests({ query, type, parentId }) {
+  async fetchRequests({ query, type, parentId, districtId }) {
     if (type === 'IMA_VOLUNTEER' || type === 'DOCTOR') {
-      this.service.fetchRequests({ ...query, type, parentId })
+      this.service.fetchRequests({ ...query, type, parentId, districtId })
         .then((data) => {
           this.sendResponse(data);
         })
@@ -78,12 +78,13 @@ export default class DoctorsController extends Controller {
     }
   }
 
-  async update({ query, type, parentId, name }) {
+  async update({ query, type, parentId, name, districtId }) {
     const params = this.validateParams(query, Validator.doctors.update);
     if (!params.request_id) params.request_id = null;
     params.parentId = parentId;
     params.type = type;
     params.name = name;
+    params.districtId = districtId;
     this.service.updateScheduler(params)
       .then((data) => {
         this.sendResponse(data);

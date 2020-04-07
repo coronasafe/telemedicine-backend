@@ -6,8 +6,10 @@ exports.up = (knex) => knex.schema.createTable('call_scheduler', (table) => {
   table.string('volunteer_id');
   table.string('volunteer_name');
   table.string('doctor_id');
+  table.integer('district_id');
   table.boolean('completed').defaultTo(false);
-  table.timestamps(false, true);
+  table.timestamp('created_at').defaultTo(knex.fn.now());
+  table.timestamp('updated_at').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
 });
 
 exports.down = (knex) => knex.schema.dropTable('call_scheduler');

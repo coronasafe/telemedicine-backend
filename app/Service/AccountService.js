@@ -51,7 +51,7 @@ export default class AccountService {
           throw error;
         });
       let user = await this.user.find({ phone_number: number, primary: true });
-      const token = jwt.sign({ parentId: number, type: 'user', name: 'USER' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ parentId: number, type: 'user', name: 'USER', districtId: 'NONE' }, process.env.JWT_SECRET, { expiresIn: '7d' });
       if (user === null) {
         return { access_token: token, role: 'USER' };
       }
@@ -99,7 +99,6 @@ export default class AccountService {
           this.user.create({
             id, phone_number, district, local_body, state, primary,
           });
-          delete params.medical_history;
           return data;
         })
         .catch(async (error) => {
@@ -119,6 +118,7 @@ export default class AccountService {
   async getAllUsers(parentId) {
     await this.corona.authorize();
     const users = await this.user.findAll({ phone_number: parentId });
+    if (users === null) throw new Error(`unable to finder user for  ${parentId}`);
     const userId = users.pluck('id');
     const dbUsers = [];
     for (let i = 0; i < userId.length; i += 1) {
@@ -129,10 +129,10 @@ export default class AccountService {
 
   async scheduleCall(params) {
     const user = await this.answer.getLatest({ id: params.id });
+    const userProfile = await this.user.find({ id: params.id });
     if (user === null) return { message: 'User not found' };
-    const obj = { user_id: params.id, user_number: params.parentId };
+    const obj = { user_id: params.id, user_number: params.parentId, district_id: userProfile.pluck('district')[0] };
     if (params.status) obj.status = params.status;
-    if (params.volunteer_id) obj.volunteer_id = params.volunteer_id;
     await this.schedule.create(obj);
     return { message: 'Volunteer has been notified and will get back to you as soon as possible' };
   }

@@ -84,6 +84,7 @@ export default {
       phone_number: Joi.string().required(),
       password: Joi.string().required(),
       district: Joi.string().required(),
+      district_id: Joi.number().required(),
       doctor: Joi.boolean().required(),
     }),
     login: Joi.object().keys({
