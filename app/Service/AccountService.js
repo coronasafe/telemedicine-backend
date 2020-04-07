@@ -131,7 +131,7 @@ export default class AccountService {
     const user = await this.answer.getLatest({ id: params.id });
     const userProfile = await this.user.find({ id: params.id });
     if (user === null) return { message: 'User not found' };
-    const obj = { user_id: params.id, user_number: params.parentId, district_id: userProfile.pluck('district')[0] };
+    const obj = { user_id: params.id, user_number: params.parentId, district_id: userProfile.get('district') };
     if (params.status) obj.status = params.status;
     await this.schedule.create(obj);
     return { message: 'Volunteer has been notified and will get back to you as soon as possible' };
