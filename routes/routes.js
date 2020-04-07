@@ -4,7 +4,7 @@ import QuestionsRouter from './QuestionsApi';
 import InternalRouter from './InternalApi';
 import AnswersRouter from './AnswersApi';
 import DoctorsRouter from './DoctorsApi';
-import CallRouter from './CallApi';
+// import CallRouter from './CallApi';
 
 export default {
 	HealthApiRouter,
@@ -13,5 +13,5 @@ export default {
 	InternalRouter,
 	AnswersRouter,
 	DoctorsRouter,
-	CallRouter,
+	// CallRouter,
 };

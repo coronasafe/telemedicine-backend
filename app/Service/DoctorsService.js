@@ -170,12 +170,10 @@ export default class DoctorsService {
 		userNumber,
 		districtId,
 	}) {
-		let obj = {};
+		const obj = {};
 		if (
-			type === 'IMA_VOLUNTEER' &&
-			(status === 'attending_by_volunteer' ||
-				status === 'forwarded_to_doctor' ||
-				status === 'closed_by_volunteer')
+			type === 'IMA_VOLUNTEER'
+			&& (status === 'attending_by_volunteer' || status === 'forwarded_to_doctor' || status === 'closed_by_volunteer')
 		) {
 			obj.status = status;
 			obj.user_id = userId;
@@ -187,8 +185,7 @@ export default class DoctorsService {
 				obj.completed = true;
 			}
 		} else if (
-			type === 'DOCTOR' &&
-			(status === 'attending_by_doctor' || status === 'closed_by_doctor')
+			type === 'DOCTOR' && (status === 'attending_by_doctor' || status === 'closed_by_doctor')
 		) {
 			obj.status = status;
 			obj.doctor_id = parentId;
