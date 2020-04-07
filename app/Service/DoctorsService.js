@@ -109,9 +109,23 @@ export default class DoctorsService {
 		const patients = [];
 		let userAnswer = {};
 		let biodata = {};
+
+		const firstPromises = [];
+		const secondPromises = [];
 		for (let i = 0; i < users.length; i += 1) {
-			userAnswer = await this.answer.fetch(users[i].user_id);
-			biodata = await this.corona.get(users[i].user_id);
+			// userAnswer = await this.answer.fetch(users[i].user_id);
+			// biodata = await this.corona.get(users[i].user_id);
+
+			firstPromises.push(this.answer.fetch(users[i].user_id));
+			secondPromises.push(this.corona.get(users[i].user_id));
+		}
+
+		const firstResult = await Promise.all(firstPromises);
+		const secondResult = await Promise.all(secondPromises);
+
+		for (let i = 0; i < users.length; i += 1) {
+			userAnswer = firstResult[i];
+			biodata = secondResult[i];
 			if (userAnswer !== null) {
 				patients.push({
 					patient: {
@@ -142,6 +156,7 @@ export default class DoctorsService {
 				});
 			}
 		}
+
 		return { entries: patients, ...pagination };
 	}
 
