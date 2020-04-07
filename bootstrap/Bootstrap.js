@@ -16,10 +16,10 @@ export default class Bootstrap {
 					.then(() => {
 						resolve(mysql.connection);
 					})
-					.catch((error) => {
+					.catch(() => {
 						reject(
 							new Error(
-								'Unable to create connection with mysql, please make sure mysql server is running.'
+								'Unable to create connection with mysql, please make sure mysql server is running.',
 							),
 						);
 					});

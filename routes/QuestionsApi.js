@@ -1,5 +1,6 @@
 import express from 'express';
 import QuestionsController from '../app/Controllers/QuestionsController';
+// import Logger from '../app/Helpers/Logger';
 
 const QuestionsRouter = express.Router();
 

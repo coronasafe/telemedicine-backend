@@ -1,4 +1,3 @@
-
 import Controller from './Controller';
 import questions from '../constants/Questions';
 import Logger from '../Helpers/Logger';

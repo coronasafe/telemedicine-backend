@@ -2,12 +2,12 @@
 import { Bookshelf } from './Model';
 
 class Answers extends Bookshelf.Model {
-  get tableName() {
-    return 'answers';
-  }
+	get tableName() {
+		return 'answers';
+	}
 
-  get hasTimestamps() {
-    return true;
-  }
+	get hasTimestamps() {
+		return true;
+	}
 }
 export default Bookshelf.model('answers', Answers);

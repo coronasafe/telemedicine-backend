@@ -8,10 +8,7 @@ export default class Contoller {
 
 	validateParams(params, validationSchema) {
 		if (validationSchema) {
-			const {
-				error,
-				value,
-			} = validationSchema.validate(params);
+			const { error, value } = validationSchema.validate(params);
 			if (error) {
 				throw error;
 			}
@@ -36,11 +33,14 @@ export default class Contoller {
 	 * @param {*} error
 	 */
 	handleException(error) {
+		let name = {};
 		if (error.sql) {
-			error.name = 'DbException';
+			name = 'DbException';
+		} else {
+			name = error.name;
 		}
 		this.response.status(401).json({
-			error: error.message,
+			error: name,
 		});
 		Logger.error(error);
 	}

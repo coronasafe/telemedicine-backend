@@ -7,8 +7,7 @@ export default class HealthController extends Controller {
 	 * @param {*} request
 	 */
 
-
-	checkHealth(request) {
+	checkHealth() {
 		try {
 			Logger.info('All Ok from health api');
 			this.sendResponse({ msg: 'ALL OK!' });

@@ -2,19 +2,21 @@
 import Answers from '../Models/Answers';
 
 export default class AnswersRepository {
-  find(obj) {
-    return Answers.where(obj).fetchAll();
-  }
+	find(obj) {
+		return Answers.where(obj).fetchAll();
+	}
 
-  getLatest(obj = {}) {
-    return Answers.where(obj).orderBy('created_at', 'desc').query((qb) => {
-      qb.limit(1);
-    })
-      .fetch()
-      .catch(() => null);
-  }
+	getLatest(obj = {}) {
+		return Answers.where(obj)
+			.orderBy('created_at', 'desc')
+			.query((qb) => {
+				qb.limit(1);
+			})
+			.fetch()
+			.catch(() => null);
+	}
 
-  create(obj) {
-    return new Answers().save(obj);
-  }
+	create(obj) {
+		return new Answers().save(obj);
+	}
 }
