@@ -66,6 +66,14 @@ export default {
 		}),
 	},
 
+	answers: {
+		submit: Joi.object().keys({
+			id: Joi.number().required(),
+			answers: Joi.object().required(),
+			score: Joi.number(),
+		}),
+	},
+
 	doctors: {
 		insert: Joi.object().keys({
 			name: Joi.string().required(),
@@ -89,6 +97,7 @@ export default {
 			phone_number: Joi.string().required(),
 			password: Joi.string().required(),
 			district: Joi.string().required(),
+			district_id: Joi.number().required(),
 			doctor: Joi.boolean().required(),
 		}),
 		login: Joi.object().keys({
@@ -102,17 +111,21 @@ export default {
 				'ADMISSION',
 				'REFERRAL',
 			),
-			category: Joi.string().valid(
-				'Category-A',
-				'Category-B',
-				'Category-C',
-				'UNCLASSIFIED',
-			),
-			other_symptoms: Joi.string(),
-			symptoms_onset_date: Joi.string(),
-			examination_details: Joi.string(),
-			existing_medication: Joi.string(),
-			prescribed_medication: Joi.string(),
+			category: [
+				Joi.string().valid(
+					'Category-A',
+					'Category-B',
+					'Category-C',
+					'UNCLASSIFIED',
+				),
+				Joi.allow(null),
+			],
+			other_symptoms: [Joi.string().optional(), Joi.allow(null)],
+			symptoms_onset_date: [Joi.string().optional(), Joi.allow(null)],
+			examination_details: [Joi.string().optional(), Joi.allow(null)],
+			existing_medication: [Joi.string().optional(), Joi.allow(null)],
+			prescribed_medication: [Joi.string().optional(), Joi.allow(null)],
+			admission_date: [Joi.string().optional(), Joi.allow(null)],
 			suggestion: Joi.string().valid('HI', 'A', 'R'),
 			patient: Joi.number(),
 			facility: Joi.number(),
@@ -123,6 +136,7 @@ export default {
 				'ICU',
 				'ICU with Ventilator',
 			),
+			request_id: Joi.number().required(),
 		}),
 	},
 };

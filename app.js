@@ -9,6 +9,7 @@ import Boostrap from './bootstrap/Bootstrap';
 import Logger from './app/Helpers/Logger';
 import isAuthenticated from './app/Middlewares/Isauthenticated';
 
+
 // loads config and env variables in process
 Config();
 const app = express();
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
 
 app.use('/api/authorize', cors());
 app.use('/api/authorize', Routes.AccountRouter);
+
 
 app.use('/api/user', [cors(), isAuthenticated]);
 app.use('/api/user', Routes.AccountRouter);
@@ -47,12 +49,10 @@ process.on('uncaughtException', (reason) => {
 });
 
 // initalizing global required services and creating server
-Promise.all(Boostrap.intializeServices())
-	.then(() => {
-		app.listen(process.project.app.port, () => {
-			Logger.info('Server Started Successfully');
-		});
-	})
-	.catch((error) => {
-		Logger.error('BoostrapInitiailizeServices', new Error(error));
+Promise.all(Boostrap.intializeServices()).then(() => {
+	app.listen(process.project.app.port, () => {
+		Logger.info('Server Started Successfully');
 	});
+}).catch((error) => {
+	Logger.error('BoostrapInitiailizeServices', new Error(error));
+});

@@ -51,6 +51,7 @@ export default class DoctorsService {
 					parentId: doctor.pluck('id')[0],
 					name: doctor.pluck('name')[0],
 					type: doctor.pluck('doctor')[0] ? 'DOCTOR' : 'IMA_VOLUNTEER',
+					districtId: doctor.pluck('district_id')[0],
 				},
 				process.env.JWT_SECRET,
 				{ expiresIn: '7d' },
@@ -68,11 +69,12 @@ export default class DoctorsService {
 		const { page } = obj;
 		delete obj.page;
 		await this.corona.authorize();
-		const defaultStatus = {};
+		let defaultStatus = [];
 		let states = [];
 		const filter = {};
+		filter.district_id = obj.districtId;
 		if (obj.status === 'All' && obj.type === 'IMA_VOLUNTEER') {
-			defaultStatus.status = 'not_attended';
+			defaultStatus = ['not_attended', 'closed_by_doctor'];
 			filter.volunteer_id = obj.parentId;
 			states = [
 				'attending_by_volunteer',
@@ -80,7 +82,7 @@ export default class DoctorsService {
 				'forwarded_to_doctor',
 			];
 		} else if (obj.status === 'All' && obj.type === 'DOCTOR') {
-			defaultStatus.status = 'forwarded_to_doctor';
+			defaultStatus = ['forwarded_to_doctor'];
 			states = ['attending_by_doctor', 'closed_by_doctor'];
 			filter.doctor_id = obj.parentId;
 		}
@@ -98,7 +100,7 @@ export default class DoctorsService {
 			else filter.doctor_id = obj.parentId;
 			users = await this.callRequest.find(filter);
 		}
-		const pagination = users.pagination;
+		const { pagination } = users;
 		if (users === null)
 			return { message: 'No new Patients with MEDIUM or HIGH priority' };
 		users = users.toJSON({ visibility: false });
@@ -133,6 +135,7 @@ export default class DoctorsService {
 					status: users[i].status,
 					volunteer_name: users[i].volunteer_name,
 					created_at: users[i].created_at,
+					updated_at: users[i].updated_at,
 					priority: 'HIGH',
 				});
 			}
@@ -148,6 +151,7 @@ export default class DoctorsService {
 		name,
 		userId,
 		userNumber,
+		districtId,
 	}) {
 		let obj = {};
 		if (
@@ -161,6 +165,7 @@ export default class DoctorsService {
 			obj.volunteer_id = parentId;
 			obj.volunteer_name = name;
 			obj.user_number = userNumber;
+			obj.district_id = districtId;
 			if (status === 'closed_by_volunteer') {
 				obj.completed = true;
 			}
@@ -235,10 +240,22 @@ export default class DoctorsService {
 	}
 
 	async consult(params) {
+		const { request_id, parentId } = params;
+		delete params.request_id;
+		delete params.parentId;
 		await this.corona.authorize();
-		return this.corona.consult(params).catch(async () => {
-			await this.corona.refresh();
-			return this.corona.consult(params);
-		});
+		return this.corona
+			.consult(params)
+			.then(async (data) => {
+				await this.callRequest.update(
+					{ status: 'closed_by_doctor', doctor_id: parentId, completed: true },
+					{ id: request_id },
+				);
+				return data;
+			})
+			.catch(async () => {
+				await this.corona.refresh();
+				return this.corona.consult(params);
+			});
 	}
 }
