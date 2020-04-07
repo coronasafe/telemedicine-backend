@@ -58,7 +58,11 @@ export default class DoctorsService {
 		if (obj.status === 'All' && obj.type === 'IMA_VOLUNTEER') {
 			defaultStatus = ['not_attended', 'closed_by_doctor'];
 			filter.volunteer_id = obj.parentId;
-			states = ['attending_by_volunteer', 'closed_by_volunteer', 'forwarded_to_doctor'];
+			states = [
+				'attending_by_volunteer',
+				'closed_by_volunteer',
+				'forwarded_to_doctor',
+			];
 		} else if (obj.status === 'All' && obj.type === 'DOCTOR') {
 			defaultStatus = ['forwarded_to_doctor'];
 			states = ['attending_by_doctor', 'closed_by_doctor'];
@@ -66,7 +70,12 @@ export default class DoctorsService {
 		}
 		let users = {};
 		if (states.length > 0) {
-			users = await this.callRequest.findPriority(filter, states, defaultStatus, page);
+			users = await this.callRequest.findPriority(
+				filter,
+				states,
+				defaultStatus,
+				page,
+			);
 		} else {
 			filter.status = obj.status;
 			if (obj.type === 'IMA_VOLUNTEER') filter.volunteer_id = obj.parentId;
@@ -74,14 +83,30 @@ export default class DoctorsService {
 			users = await this.callRequest.find(filter);
 		}
 		const { pagination } = users;
-		if (users === null) return { message: 'No new Patients with MEDIUM or HIGH priority' };
+		if (users === null) {
+			return { message: 'No new Patients with MEDIUM or HIGH priority' };
+		}
 		users = users.toJSON({ visibility: false });
 		const patients = [];
 		let userAnswer = {};
 		let biodata = {};
+
+		const firstPromises = [];
+		const secondPromises = [];
 		for (let i = 0; i < users.length; i += 1) {
-			userAnswer = await this.answer.fetch(users[i].user_id);
-			biodata = await this.corona.get(users[i].user_id);
+			// userAnswer = await this.answer.fetch(users[i].user_id);
+			// biodata = await this.corona.get(users[i].user_id);
+
+			firstPromises.push(this.answer.fetch(users[i].user_id));
+			secondPromises.push(this.corona.get(users[i].user_id));
+		}
+
+		const firstResult = await Promise.all(firstPromises);
+		const secondResult = await Promise.all(secondPromises);
+
+		for (let i = 0; i < users.length; i += 1) {
+			userAnswer = firstResult[i];
+			biodata = secondResult[i];
 			if (userAnswer !== null) {
 				patients.push({
 					patient: {
@@ -109,10 +134,10 @@ export default class DoctorsService {
 					created_at: users[i].created_at,
 					updated_at: users[i].updated_at,
 					priority: 'HIGH',
-
 				});
 			}
 		}
+
 		return { entries: patients, ...pagination };
 	}
 
