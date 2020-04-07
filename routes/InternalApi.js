@@ -8,5 +8,4 @@ InternalRouter.post('/doctor/signup', (request, response) => {
 	controller.signup(request);
 });
 
-
 export default InternalRouter;

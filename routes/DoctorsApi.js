@@ -20,29 +20,28 @@ const DoctorsRouter = express.Router();
 // });
 
 DoctorsRouter.post('/signup', (request, response) => {
-  const controller = new DoctorsController(response);
-  controller.signup(request);
+	const controller = new DoctorsController(response);
+	controller.signup(request);
 });
 
 DoctorsRouter.get('/requests/fetch', (request, response) => {
-  const controller = new DoctorsController(response);
-  controller.fetchRequests(request);
+	const controller = new DoctorsController(response);
+	controller.fetchRequests(request);
 });
 
 DoctorsRouter.get('/requests/update', (request, response) => {
-  const controller = new DoctorsController(response);
-  controller.update(request);
+	const controller = new DoctorsController(response);
+	controller.update(request);
 });
 
 DoctorsRouter.get('/requests/count', (request, response) => {
-  const controller = new DoctorsController(response);
-  controller.count(request);
+	const controller = new DoctorsController(response);
+	controller.count(request);
 });
 
 DoctorsRouter.post('/requests/consultation', (request, response) => {
-  const controller = new DoctorsController(response);
-  controller.consult(request);
+	const controller = new DoctorsController(response);
+	controller.consult(request);
 });
-
 
 export default DoctorsRouter;
