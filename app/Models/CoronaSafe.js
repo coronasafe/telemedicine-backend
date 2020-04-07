@@ -20,7 +20,7 @@ export default class {
       }
       const options = {
         method: 'POST',
-        url: 'https://api.care.coronasafe.in/api/v1/auth/login/',
+        url: `${process.env.CORONA_API}/api/v1/auth/login/`,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -47,7 +47,7 @@ export default class {
     try {
       const options = {
         method: 'POST',
-        url: 'https://api.care.coronasafe.in/api/v1/patient/',
+        url: `${process.env.CORONA_API}/api/v1/patient/`,
         headers: {
           Authorization: `Bearer ${credentials.access}`,
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export default class {
     return new Promise((resolve, reject) => {
       const options = {
         method: 'POST',
-        url: 'https://api.care.coronasafe.in/api/v1/auth/token/refresh/',
+        url: `${process.env.CORONA_API}/api/v1/auth/token/refresh/`,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -87,7 +87,7 @@ export default class {
   async get(id) {
     const options = {
       method: 'GET',
-      url: `https://api.care.coronasafe.in/api/v1/patient/${id}`,
+      url: `${process.env.CORONA_API}/api/v1/patient/${id}`,
       headers: {
         Authorization: `Bearer ${credentials.access}`,
         'Content-Type': 'application/json',
@@ -97,7 +97,8 @@ export default class {
     let count = 0;
     return rp(options)
       .then((data) => data)
-      .catch(async () => {
+      .catch(async (error) => {
+        console.log(error);
         count += 1;
         if (count > 3) {
           throw new Error('cannot retrive data');
@@ -110,7 +111,7 @@ export default class {
   async consult(payload) {
     const options = {
       method: 'POST',
-      url: 'https://api.care.coronasafe.in/api/v1/consultation/',
+      url: `${process.env.CORONA_API}/api/v1/consultation/`,
       headers: {
         Authorization: `Bearer ${credentials.access}`,
         'Content-Type': 'application/json',

@@ -51,15 +51,15 @@ export default class DoctorsService {
     const { page } = obj;
     delete obj.page;
     await this.corona.authorize();
-    const defaultStatus = {};
+    let defaultStatus = [];
     let states = [];
     const filter = {};
     if (obj.status === 'All' && obj.type === 'IMA_VOLUNTEER') {
-      defaultStatus.status = 'not_attended';
+      defaultStatus = ['not_attended', 'closed_by_doctor'];
       filter.volunteer_id = obj.parentId;
       states = ['attending_by_volunteer', 'closed_by_volunteer', 'forwarded_to_doctor'];
     } else if (obj.status === 'All' && obj.type === 'DOCTOR') {
-      defaultStatus.status = 'forwarded_to_doctor';
+      defaultStatus = ['forwarded_to_doctor'];
       states = ['attending_by_doctor', 'closed_by_doctor'];
       filter.doctor_id = obj.parentId;
     }
@@ -150,9 +150,7 @@ export default class DoctorsService {
       obj.attending_by_you = await this.callRequest.count({ status: 'attending_by_volunteer', volunteer_id: parentId });
       obj.closed_by_you = await this.callRequest.count({ status: 'closed_by_volunteer', volunteer_id: parentId });
       obj.total_attended_by_you = await this.callRequest.count({ volunteer_id: parentId });
-      obj.forwarded_by_you_pending = await this.callRequest.count({
-        status: 'forwarded_to_doctor',
-        volunteer_id: parentId });
+      obj.forwarded_by_you_pending = await this.callRequest.count({ status: 'forwarded_to_doctor', volunteer_id: parentId });
       obj.total_completed_by_you = await this.callRequest.count({ completed: true, volunteer_id: parentId });
     } else if (type === 'DOCTOR') {
       obj.attending_by_you = await this.callRequest.count({ status: 'attending_by_doctor', doctor_id: parentId });
@@ -168,8 +166,14 @@ export default class DoctorsService {
   }
 
   async consult(params) {
+    const { request_id, parentId } = params;
+    delete params.request_id;
+    delete params.parentId;
     await this.corona.authorize();
     return this.corona.consult(params)
+      .then(async () => {
+        await this.callRequest.update({ status: 'closed_by_doctor', doctor_id: parentId, completed: true }, { id: request_id });
+      })
       .catch(async () => {
         await this.corona.refresh();
         return this.corona.consult(params);
