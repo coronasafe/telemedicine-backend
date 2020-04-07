@@ -3,6 +3,8 @@
 /* eslint-disable no-useless-catch */
 import rp from 'request-promise';
 
+import Logger from '../Helpers/Logger';
+
 const credentials = {
 	access: '',
 	refresh: '',
@@ -73,9 +75,9 @@ export default class {
 			};
 			rp(options)
 				.then((data) => {
-					data = JSON.parse(data);
-					credentials.access = data.access;
-					credentials.refresh = data.refresh;
+					const parsedData = JSON.parse(data);
+					credentials.access = parsedData.access;
+					credentials.refresh = parsedData.refresh;
 					resolve('done');
 				})
 				.catch((error) => {
@@ -98,7 +100,7 @@ export default class {
 		return rp(options)
 			.then((data) => data)
 			.catch(async (error) => {
-				console.log(error);
+				Logger.error(error);
 				count += 1;
 				if (count > 3) {
 					throw new Error('cannot retrive data');

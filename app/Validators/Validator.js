@@ -66,14 +66,6 @@ export default {
 		}),
 	},
 
-	answers: {
-		submit: Joi.object().keys({
-			id: Joi.number().required(),
-			answers: Joi.object().required(),
-			score: Joi.number(),
-		}),
-	},
-
 	doctors: {
 		insert: Joi.object().keys({
 			name: Joi.string().required(),

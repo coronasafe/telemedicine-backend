@@ -5,21 +5,29 @@
 import Mysql from './Initializers/mysql';
 
 export default class Bootstrap {
-  static intializeServices() {
-    const promiseStack = [];
+	static intializeServices() {
+		const promiseStack = [];
 
-    // checks if mysql connection required by app
-    if (process.project.db.connection === 'mysql') {
-      const mysqlPromise = new Promise((resolve, reject) => {
-        const mysql = new Mysql();
-        mysql.connection.raw('select 1+1 as result').then(() => {
-          resolve(mysql.connection);
-        }).catch((error) => {
-          reject(new Error('Unable to create connection with mysql, please make sure mysql server is running.'));
-        });
-      });
-      promiseStack.push(mysqlPromise);
-    }
-    return promiseStack;
-  }
+		// checks if mysql connection required by app
+		if (process.project.db.connection === 'mysql') {
+			const mysqlPromise = new Promise((resolve, reject) => {
+				const mysql = new Mysql();
+				mysql.connection
+					.raw('select 1+1 as result')
+					.then(() => {
+						resolve(mysql.connection);
+					})
+					// eslint-disable-next-line no-unused-vars
+					.catch((error) => {
+						reject(
+							new Error(
+								'Unable to create connection with mysql, please make sure mysql server is running.',
+							),
+						);
+					});
+			});
+			promiseStack.push(mysqlPromise);
+		}
+		return promiseStack;
+	}
 }

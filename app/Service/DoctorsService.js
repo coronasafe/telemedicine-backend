@@ -31,8 +31,9 @@ export default class DoctorsService {
 	// }
 
 	async signup(params) {
-		params.password = await bcrypt.hash(params.password, 10);
-		return this.doctor.create(params);
+		const obj = params;
+		obj.password = await bcrypt.hash(params.password, 10);
+		return this.doctor.create(obj);
 	}
 
 	async login(params) {
@@ -101,8 +102,9 @@ export default class DoctorsService {
 			users = await this.callRequest.find(filter);
 		}
 		const { pagination } = users;
-		if (users === null)
+		if (users === null) {
 			return { message: 'No new Patients with MEDIUM or HIGH priority' };
+		}
 		users = users.toJSON({ visibility: false });
 		const patients = [];
 		let userAnswer = {};

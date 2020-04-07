@@ -3,11 +3,11 @@
 import Doctors from '../Models/Doctors';
 
 export default class DoctorsRepository {
-  find(obj) {
-    return Doctors.where(obj).fetchAll({ require: true });
-  }
+	find(obj) {
+		return Doctors.where(obj).fetchAll({ require: true });
+	}
 
-  create(obj) {
-    return new Doctors().save(obj);
-  }
+	create(obj) {
+		return new Doctors().save(obj);
+	}
 }

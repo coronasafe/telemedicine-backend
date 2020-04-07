@@ -98,6 +98,7 @@ export default class AccountService {
 			return this.corona
 				.create(params)
 				.then((data) => {
+					// eslint-disable-next-line camelcase
 					const { id, phone_number, district, local_body, state } = data;
 					params.id = id;
 					this.user.create({
@@ -112,8 +113,9 @@ export default class AccountService {
 				})
 				.catch(async (error) => {
 					Logger.error(error);
-					count += 1;
-					if (count > 5) {
+					let i = count;
+					i += 1;
+					if (i > 5) {
 						throw new Error('failed to create user');
 					}
 					await this.corona.refresh();
@@ -127,8 +129,9 @@ export default class AccountService {
 	async getAllUsers(parentId) {
 		await this.corona.authorize();
 		const users = await this.user.findAll({ phone_number: parentId });
-		if (users === null)
+		if (users === null) {
 			throw new Error(`unable to finder user for  ${parentId}`);
+		}
 		const userId = users.pluck('id');
 		const dbUsers = [];
 		for (let i = 0; i < userId.length; i += 1) {
