@@ -25,7 +25,7 @@ RUN npm --prefix /tmp/build install
 
 
 # Final image
-FROM node:10.18-stretch
+FROM node:10.18-stretch-slim
 
 WORKDIR /app
 
