@@ -15,6 +15,6 @@ module.exports = {
 	rules: {
 		indent: [2, 'tab'],
 		'no-tabs': 0,
-		'implicit-arrow-linebreak': 'below',
+		'implicit-arrow-linebreak': ['off', 'below'],
 	},
 };
