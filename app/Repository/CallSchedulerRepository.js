@@ -11,9 +11,9 @@ export default class CallSchedulerRepository {
 	findPriority(obj, states, defaultStatus, page) {
 		return CallScheduler.query((qb) => {
 			qb.where('status', 'IN', states)
-				.where(obj);
-			qb.where('status', 'IN', defaultStatus)
-				.where({ district_id: obj.district_id });
+				.where(obj)
+				.orWhere('status', 'IN', defaultStatus)
+				.andWhere({ district_id: obj.district_id });
 		})
 			.orderBy('updated_at', 'desc')
 			.fetchPage({ page, pageSize });
