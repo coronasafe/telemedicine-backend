@@ -7,11 +7,11 @@ import DoctorsRouter from './DoctorsApi';
 import CallRouter from './CallApi';
 
 export default {
-  HealthApiRouter,
-  AccountRouter,
-  QuestionsRouter,
-  InternalRouter,
-  AnswersRouter,
-  DoctorsRouter,
-  CallRouter,
+	HealthApiRouter,
+	AccountRouter,
+	QuestionsRouter,
+	InternalRouter,
+	AnswersRouter,
+	DoctorsRouter,
+	CallRouter,
 };

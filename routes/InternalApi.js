@@ -1,11 +1,11 @@
 import express from 'express';
-import QuestionsController from '../app/Controllers/QuestionsController';
+import DoctorController from '../app/Controllers/DoctorsController';
 
 const InternalRouter = express.Router();
 
-InternalRouter.post('/create', (request, response) => {
-  const controller = new QuestionsController(response);
-  controller.create(request);
+InternalRouter.post('/doctor/signup', (request, response) => {
+	const controller = new DoctorController(response);
+	controller.signup(request);
 });
 
 
