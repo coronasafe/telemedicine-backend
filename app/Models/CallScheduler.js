@@ -2,13 +2,13 @@
 import { Bookshelf } from './Model';
 
 class callScheduler extends Bookshelf.Model {
-  get tableName() {
-    return 'call_scheduler';
-  }
+	get tableName() {
+		return 'call_scheduler';
+	}
 
-  get hasTimestamps() {
-    return true;
-  }
+	get hasTimestamps() {
+		return true;
+	}
 }
 
 export default Bookshelf.model('call_scheduler', callScheduler);

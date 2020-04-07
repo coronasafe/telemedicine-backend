@@ -93,11 +93,16 @@ export default class AccountService {
 			return this.corona.create(params)
 				.then((data) => {
 					const {
-						id, phone_number, district, local_body, state,
+						id, district, state,
 					} = data;
 					params.id = id;
 					this.user.create({
-						id, phone_number, district, local_body, state, primary,
+						phone_number: data.phone_number,
+						id,
+						district,
+						local_body: data.local_body,
+						state,
+						primary,
 					});
 					return data;
 				})

@@ -4,9 +4,7 @@ import Controller from './Controller';
 import Validator from '../Validators/Validator';
 
 import DoctorsService from '../Service/DoctorsService';
-import { request } from 'express';
 // import Logger from '../Helpers/Logger';
-
 
 export default class DoctorsController extends Controller {
 	constructor(response) {
@@ -57,7 +55,8 @@ export default class DoctorsController extends Controller {
 
 	async signup({ body }) {
 		const params = this.validateParams(body, Validator.doctors.signup);
-		this.service.signup(params)
+		this.service
+			.signup(params)
 			.then(() => {
 				this.sendResponse({ messgae: 'created doc' });
 			})
@@ -68,7 +67,13 @@ export default class DoctorsController extends Controller {
 
 	async fetchRequests({ query, type, parentId, districtId }) {
 		if (type === 'IMA_VOLUNTEER' || type === 'DOCTOR') {
-			this.service.fetchRequests({ ...query, type, parentId, districtId })
+			this.service
+				.fetchRequests({
+					...query,
+					type,
+					parentId,
+					districtId,
+				})
 				.then((data) => {
 					this.sendResponse(data);
 				})
@@ -85,7 +90,8 @@ export default class DoctorsController extends Controller {
 		params.type = type;
 		params.name = name;
 		params.districtId = districtId;
-		this.service.updateScheduler(params)
+		this.service
+			.updateScheduler(params)
 			.then((data) => {
 				this.sendResponse(data);
 			})
@@ -95,7 +101,8 @@ export default class DoctorsController extends Controller {
 	}
 
 	async count({ type, parentId }) {
-		this.service.getAllCounts({ type, parentId })
+		this.service
+			.getAllCounts({ type, parentId })
 			.then((data) => {
 				this.sendResponse(data);
 			})
@@ -110,7 +117,8 @@ export default class DoctorsController extends Controller {
 		params.parentId = parentId;
 		params.facility = 214;
 		if (type === 'DOCTOR') {
-			this.service.consult(params)
+			this.service
+				.consult(params)
 				.then((data) => {
 					this.sendResponse(data);
 				})

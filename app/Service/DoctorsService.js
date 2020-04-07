@@ -10,7 +10,10 @@ export default class DoctorsService {
 	constructor() {
 		this.doctor = new DoctorsRepository();
 		this.callRequest = new CallSchedulerRepository();
-		this.corona = new CoronaSafe({ username: process.env.C_USERNAME, password: process.env.C_PASSWORD });
+		this.corona = new CoronaSafe({
+			username: process.env.C_USERNAME,
+			password: process.env.C_PASSWORD,
+		});
 		this.answer = new AnswerService();
 	}
 
@@ -144,7 +147,7 @@ export default class DoctorsService {
 	async updateScheduler({
 		status, request_id, parentId, type, name, userId, userNumber, districtId,
 	}) {
-		let obj = {};
+		const obj = {};
 		if (type === 'IMA_VOLUNTEER' && (status === 'attending_by_volunteer' || status === 'forwarded_to_doctor' || status === 'closed_by_volunteer')) {
 			obj.status = status;
 			obj.user_id = userId;
@@ -179,12 +182,18 @@ export default class DoctorsService {
 			obj.closed_by_you = await this.callRequest.count({ status: 'closed_by_volunteer', volunteer_id: parentId });
 			obj.total_attended_by_you = await this.callRequest.count({ volunteer_id: parentId });
 			obj.forwarded_by_you_pending = await this.callRequest.count({ status: 'forwarded_to_doctor', volunteer_id: parentId });
-			obj.total_completed_by_you = await this.callRequest.count({ completed: true, volunteer_id: parentId });
+			obj.total_completed_by_you = await this.callRequest.count({
+				completed: true,
+				volunteer_id: parentId,
+			});
 		} else if (type === 'DOCTOR') {
 			obj.attending_by_you = await this.callRequest.count({ status: 'attending_by_doctor', doctor_id: parentId });
 			obj.closed_by_you = await this.callRequest.count({ status: 'closed_by_doctor', doctor_id: parentId });
 			obj.total_attended_by_you = await this.callRequest.count({ doctor_id: parentId });
-			obj.total_completed_by_you = await this.callRequest.count({ completed: true, doctor_id: parentId });
+			obj.total_completed_by_you = await this.callRequest.count({
+				completed: true,
+				doctor_id: parentId,
+			});
 		}
 		obj.total_requests = await this.callRequest.count();
 		obj.total_completed = await this.callRequest.count({ completed: true });
