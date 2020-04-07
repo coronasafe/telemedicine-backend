@@ -24,14 +24,6 @@ COPY package*.json /tmp/build/
 RUN npm --prefix /tmp/build install
 
 
-
-FROM node:10.18-stretch as tsc-builder
-COPY --from=git-builder /app /app
-COPY --from=npm-builder /tmp/build/node_modules /app/node-api/node_modules
-RUN npm --prefix /app/node-api run tsc && \
-    npm --prefix /app/node-api prune --production
-
-
 # Final image
 FROM node:10.18-stretch
 
