@@ -38,7 +38,7 @@ app.use('/api/questions', Routes.QuestionsRouter);
 
 app.use('/internal', Routes.InternalRouter);
 
-app.use('/api/call', Routes.CallRouter);
+// app.use('/api/call', Routes.CallRouter);
 
 /**
  * uncaught exception handling
