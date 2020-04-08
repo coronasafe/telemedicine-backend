@@ -7,7 +7,6 @@ import Mysql from './Initializers/mysql';
 export default class Bootstrap {
 	static intializeServices() {
 		const promiseStack = [];
-
 		// checks if mysql connection required by app
 		if (process.project.db.connection === 'mysql') {
 			const mysqlPromise = new Promise((resolve, reject) => {
@@ -17,8 +16,7 @@ export default class Bootstrap {
 					.then(() => {
 						resolve(mysql.connection);
 					})
-					// eslint-disable-next-line no-unused-vars
-					.catch((error) => {
+					.catch(() => {
 						reject(
 							new Error(
 								'Unable to create connection with mysql, please make sure mysql server is running.',

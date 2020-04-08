@@ -170,7 +170,7 @@ export default class DoctorsService {
 		userNumber,
 		districtId,
 	}) {
-		let obj = {};
+		const obj = {};
 		if (
 			type === 'IMA_VOLUNTEER' &&
 			(status === 'attending_by_volunteer' ||

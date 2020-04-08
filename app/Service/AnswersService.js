@@ -57,6 +57,11 @@ export default class AnswersService {
 			);
 			obj[q] = a;
 		}
-		return { symptoms: obj, score, priority, created_at };
+		return {
+			symptoms: obj,
+			score,
+			priority,
+			created_at,
+		};
 	}
 }

@@ -12,7 +12,8 @@ export default class CallSchedulerRepository {
 		return CallScheduler.query((qb) => {
 			qb.where('status', 'IN', states)
 				.where(obj)
-				.orWhere('status', 'IN', defaultStatus);
+				.orWhere('status', 'IN', defaultStatus)
+				.andWhere({ district_id: obj.district_id });
 		})
 			.orderBy('updated_at', 'desc')
 			.fetchPage({ page, pageSize });

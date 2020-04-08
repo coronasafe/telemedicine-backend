@@ -15,7 +15,7 @@ QuestionsRouter.get('/fetch', (request, response) => {
 });
 
 QuestionsRouter.get('/zgWuZoU743XKtLkm', (request, response) => {
-	Logger.info(request.query);
+	// console.log(request.query);
 	response.status(200).send('9074631410');
 });
 

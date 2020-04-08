@@ -2,13 +2,7 @@ import Controller from './Controller';
 import Logger from '../Helpers/Logger';
 
 export default class HealthController extends Controller {
-	/**
-	 * check server
-	 * @param {*} request
-	 */
-
-	/* eslint-disable no-unused-vars */
-	checkHealth(request) {
+	checkHealth() {
 		try {
 			Logger.info('All Ok from health api');
 			this.sendResponse({ msg: 'ALL OK!' });
@@ -16,5 +10,4 @@ export default class HealthController extends Controller {
 			this.handleException(error);
 		}
 	}
-	/* eslint-enable no-unused-vars */
 }

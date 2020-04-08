@@ -98,14 +98,13 @@ export default class AccountService {
 			return this.corona
 				.create(params)
 				.then((data) => {
-					// eslint-disable-next-line camelcase
-					const { id, phone_number, district, local_body, state } = data;
+					const { id, district, state } = data;
 					params.id = id;
 					this.user.create({
+						phone_number: data.phone_number,
 						id,
-						phone_number,
 						district,
-						local_body,
+						local_body: data.local_body,
 						state,
 						primary,
 					});
@@ -113,9 +112,8 @@ export default class AccountService {
 				})
 				.catch(async (error) => {
 					Logger.error(error);
-					let i = count;
-					i += 1;
-					if (i > 5) {
+					count += 1;
+					if (count > 5) {
 						throw new Error('failed to create user');
 					}
 					await this.corona.refresh();
@@ -129,9 +127,8 @@ export default class AccountService {
 	async getAllUsers(parentId) {
 		await this.corona.authorize();
 		const users = await this.user.findAll({ phone_number: parentId });
-		if (users === null) {
+		if (users === null)
 			throw new Error(`unable to finder user for  ${parentId}`);
-		}
 		const userId = users.pluck('id');
 		const dbUsers = [];
 		for (let i = 0; i < userId.length; i += 1) {
@@ -147,7 +144,7 @@ export default class AccountService {
 		const obj = {
 			user_id: params.id,
 			user_number: params.parentId,
-			district_id: userProfile.pluck('district')[0],
+			district_id: userProfile.get('district'),
 		};
 		if (params.status) obj.status = params.status;
 		await this.schedule.create(obj);

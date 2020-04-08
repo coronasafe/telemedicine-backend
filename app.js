@@ -29,7 +29,6 @@ app.use('/api/user', Routes.AccountRouter);
 app.use('/api/answers', [cors(), isAuthenticated]);
 app.use('/api/answers', Routes.AnswersRouter);
 
-app.use('/doctor', Routes.DoctorsRouter);
 app.use('/api/doctors', [cors(), isAuthenticated]);
 app.use('/api/doctors', Routes.DoctorsRouter);
 app.use('/api/questions', cors());
@@ -37,7 +36,7 @@ app.use('/api/questions', Routes.QuestionsRouter);
 
 app.use('/internal', Routes.InternalRouter);
 
-app.use('/api/call', Routes.CallRouter);
+// app.use('/api/call', Routes.CallRouter);
 
 /**
  * uncaught exception handling

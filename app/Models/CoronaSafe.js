@@ -71,13 +71,13 @@ export default class {
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ refresh: credentials.refresh }),
+				body: { refresh: credentials.refresh },
+				json: true,
 			};
 			rp(options)
 				.then((data) => {
-					const parsedData = JSON.parse(data);
-					credentials.access = parsedData.access;
-					credentials.refresh = parsedData.refresh;
+					credentials.access = data.access;
+					credentials.refresh = data.refresh;
 					resolve('done');
 				})
 				.catch((error) => {
@@ -100,7 +100,7 @@ export default class {
 		return rp(options)
 			.then((data) => data)
 			.catch(async (error) => {
-				Logger.error(error);
+				console.log(error);
 				count += 1;
 				if (count > 3) {
 					throw new Error('cannot retrive data');
