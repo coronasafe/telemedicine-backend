@@ -68,12 +68,7 @@ export default class DoctorsController extends Controller {
 	async fetchRequests({ query, type, parentId, districtId }) {
 		if (type === 'IMA_VOLUNTEER' || type === 'DOCTOR') {
 			this.service
-				.fetchRequests({
-					...query,
-					type,
-					parentId,
-					districtId,
-				})
+				.fetchRequests({ ...query, type, parentId, districtId })
 				.then((data) => {
 					this.sendResponse(data);
 				})

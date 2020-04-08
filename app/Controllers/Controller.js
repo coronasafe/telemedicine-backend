@@ -33,11 +33,14 @@ export default class Contoller {
 	 * @param {*} error
 	 */
 	handleException(error) {
+		let name = {};
 		if (error.sql) {
-			error.name = 'DbException';
+			name = 'DbException';
+		} else {
+			name = error.name;
 		}
 		this.response.status(401).json({
-			error: error.message,
+			error: name,
 		});
 		Logger.error(error);
 	}

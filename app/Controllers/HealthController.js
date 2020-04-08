@@ -2,6 +2,11 @@ import Controller from './Controller';
 import Logger from '../Helpers/Logger';
 
 export default class HealthController extends Controller {
+	/**
+	 * check server
+	 * @param {*} request
+	 */
+
 	checkHealth() {
 		try {
 			Logger.info('All Ok from health api');

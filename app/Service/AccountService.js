@@ -17,8 +17,8 @@ export default class AccountService {
 		this.user = new UseProfileRepository();
 		this.schedule = new CallSchedulerRepository();
 		this.corona = new CoronaSafe({
-			username: 'surekhsha_test',
-			password: 'Mark42!rockz',
+			username: process.env.C_USERNAME,
+			password: process.env.C_PASSWORD,
 		});
 		this.answer = new AnswerRepository();
 	}
@@ -98,7 +98,7 @@ export default class AccountService {
 			return this.corona
 				.create(params)
 				.then((data) => {
-					const { id, district, state } = data;
+					const { id, phone_number, district, local_body, state } = data;
 					params.id = id;
 					this.user.create({
 						phone_number: data.phone_number,
@@ -112,8 +112,9 @@ export default class AccountService {
 				})
 				.catch(async (error) => {
 					Logger.error(error);
-					count += 1;
-					if (count > 5) {
+					let i = count;
+					i += 1;
+					if (i > 5) {
 						throw new Error('failed to create user');
 					}
 					await this.corona.refresh();
@@ -127,8 +128,9 @@ export default class AccountService {
 	async getAllUsers(parentId) {
 		await this.corona.authorize();
 		const users = await this.user.findAll({ phone_number: parentId });
-		if (users === null)
+		if (users === null) {
 			throw new Error(`unable to finder user for  ${parentId}`);
+		}
 		const userId = users.pluck('id');
 		const dbUsers = [];
 		for (let i = 0; i < userId.length; i += 1) {
