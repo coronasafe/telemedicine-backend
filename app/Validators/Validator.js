@@ -1,7 +1,6 @@
 import Joi from '@hapi/joi';
 
 export default {
-
 	user: {
 		verify: Joi.object().keys({
 			number: Joi.string().required(),
@@ -35,7 +34,9 @@ export default {
 			past_travel: Joi.boolean(),
 			has_SARI: Joi.boolean(),
 			countries_travelled: Joi.string().allow('').optional(),
-			phone_number: Joi.string().regex(/^((\+91|91|0)[\- ]{0,1})?[456789]\d{9}$/),
+			phone_number: Joi.string().regex(
+				/^((\+91|91|0)[\- ]{0,1})?[456789]\d{9}$/,
+			),
 			contact_with_carrier: Joi.boolean(),
 			is_active: Joi.boolean(),
 			local_body: Joi.number().integer(),
@@ -73,7 +74,13 @@ export default {
 			phone: Joi.string().required(),
 		}),
 		update: Joi.object().keys({
-			status: Joi.string().valid('attending_by_volunteer', 'forwarded_to_doctor', 'closed_by_volunteer', 'attending_by_doctor', 'closed_by_doctor'),
+			status: Joi.string().valid(
+				'attending_by_volunteer',
+				'forwarded_to_doctor',
+				'closed_by_volunteer',
+				'attending_by_doctor',
+				'closed_by_doctor',
+			),
 			request_id: Joi.string(),
 			userId: Joi.string(),
 			userNumber: Joi.string(),
@@ -93,8 +100,20 @@ export default {
 		}),
 		consult: Joi.object().keys({
 			symptoms: Joi.array(),
-			suggestion_text: Joi.string().valid('HOME ISOLATION', 'ADMISSION', 'REFERRAL'),
-			category: [Joi.string().valid('Category-A', 'Category-B', 'Category-C', 'UNCLASSIFIED'), Joi.allow(null)],
+			suggestion_text: Joi.string().valid(
+				'HOME ISOLATION',
+				'ADMISSION',
+				'REFERRAL',
+			),
+			category: [
+				Joi.string().valid(
+					'Category-A',
+					'Category-B',
+					'Category-C',
+					'UNCLASSIFIED',
+				),
+				Joi.allow(null),
+			],
 			other_symptoms: [Joi.string().optional(), Joi.allow(null)],
 			symptoms_onset_date: [Joi.string().optional(), Joi.allow(null)],
 			examination_details: [Joi.string().optional(), Joi.allow(null)],
@@ -105,7 +124,12 @@ export default {
 			patient: Joi.number(),
 			facility: Joi.number(),
 			admitted: Joi.boolean(),
-			admitted_to: Joi.string().valid('Not admitted', 'Isolation Room', 'ICU', 'ICU with Ventilator'),
+			admitted_to: Joi.string().valid(
+				'Not admitted',
+				'Isolation Room',
+				'ICU',
+				'ICU with Ventilator',
+			),
 			request_id: Joi.number().required(),
 		}),
 	},

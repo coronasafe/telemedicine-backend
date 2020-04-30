@@ -6,7 +6,7 @@
 // export default class CallController extends Controller {
 // 	constructor(response) {
 // 		super(response);
-// 		this.service = new CallService();
+// 		// this.service = new CallService();
 // 	}
 
 // 	async get({ query }) {

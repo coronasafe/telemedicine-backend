@@ -4,7 +4,6 @@ import AccountService from '../Service/AccountService';
 import DoctorsService from '../Service/DoctorsService';
 import Logger from '../Helpers/Logger';
 
-
 export default class AccountController extends Controller {
 	constructor(response) {
 		super(response);
@@ -16,7 +15,8 @@ export default class AccountController extends Controller {
 		try {
 			const number = query.phone;
 			Logger.info(`Sending otp for number ${number}`);
-			this.userService.sendOTP(query.phone)
+			this.userService
+				.sendOTP(query.phone)
 				.then(() => {
 					this.sendResponse({ message: 'OTP SEND' });
 				})
@@ -32,7 +32,8 @@ export default class AccountController extends Controller {
 		try {
 			Logger.info('verifying OTP');
 			const params = this.validateParams(query, Validator.user.verify);
-			this.userService.verifyOTP(params)
+			this.userService
+				.verifyOTP(params)
 				.then((data) => {
 					this.sendResponse(data);
 				})
@@ -48,7 +49,8 @@ export default class AccountController extends Controller {
 		try {
 			Logger.info('updating new user in coronasafeDb');
 			const params = this.validateParams(body, Validator.user.update);
-			this.userService.update(params)
+			this.userService
+				.update(params)
 				.then((data) => {
 					Logger.info('Updated user in coronasafeDb');
 					this.sendResponse(data);
@@ -62,7 +64,8 @@ export default class AccountController extends Controller {
 	}
 
 	async getAllUsers({ parentId }) {
-		this.userService.getAllUsers(parentId)
+		this.userService
+			.getAllUsers(parentId)
 			.then((data) => {
 				this.sendResponse(data);
 			})
@@ -73,7 +76,8 @@ export default class AccountController extends Controller {
 
 	async login({ body }) {
 		const params = this.validateParams(body, Validator.doctors.login);
-		this.doctorService.login(params)
+		this.doctorService
+			.login(params)
 			.then((data) => {
 				this.sendResponse(data);
 			})
@@ -93,7 +97,8 @@ export default class AccountController extends Controller {
 			params.volunteer_id = parentId;
 			params.status = 'attending_by_volunteer';
 		}
-		this.userService.scheduleCall(params)
+		this.userService
+			.scheduleCall(params)
 			.then((data) => {
 				this.sendResponse(data);
 			})

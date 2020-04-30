@@ -3,6 +3,8 @@
 /* eslint-disable no-useless-catch */
 import rp from 'request-promise';
 
+import Logger from '../Helpers/Logger';
+
 const credentials = {
 	access: '',
 	refresh: '',

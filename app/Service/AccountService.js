@@ -16,7 +16,10 @@ export default class AccountService {
 		this.otp = new TempOtpRepository();
 		this.user = new UseProfileRepository();
 		this.schedule = new CallSchedulerRepository();
-		this.corona = new CoronaSafe({ username: 'surekhsha_test', password: 'Mark42!rockz' });
+		this.corona = new CoronaSafe({
+			username: process.env.C_USERNAME,
+			password: process.env.C_PASSWORD,
+		});
 		this.answer = new AnswerRepository();
 	}
 
@@ -46,26 +49,28 @@ export default class AccountService {
 	async verifyOTP({ otp, number }) {
 		try {
 			await this.corona.authorize();
-			await this.otp.find({ otp, number })
-				.catch((error) => {
-					throw error;
-				});
+			await this.otp.find({ otp, number }).catch((error) => {
+				throw error;
+			});
 			let user = await this.user.find({ phone_number: number, primary: true });
-			const token = jwt.sign({ parentId: number, type: 'user', name: 'USER', districtId: 'NONE' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+			const token = jwt.sign(
+				{ parentId: number, type: 'user', name: 'USER', districtId: 'NONE' },
+				process.env.JWT_SECRET,
+				{ expiresIn: '7d' },
+			);
 			if (user === null) {
 				return { access_token: token, role: 'USER' };
 			}
 			user = user.toJSON({ visibility: false });
 			let count = 0;
-			user = await this.corona.get(user.id)
-				.catch(async (error) => {
-					count = +1;
-					if (count > 3) {
-						throw error;
-					}
-					await this.corona.authorize();
-					return this.corona.get(user.id);
-				});
+			user = await this.corona.get(user.id).catch(async (error) => {
+				count = +1;
+				if (count > 3) {
+					throw error;
+				}
+				await this.corona.authorize();
+				return this.corona.get(user.id);
+			});
 			return { access_token: token, role: 'USER', userInfo: user };
 		} catch (error) {
 			Logger.error(error);
@@ -90,11 +95,10 @@ export default class AccountService {
 			}
 			params.medical_history = medicalHistory;
 			params.disease_status = 'NEGATIVE';
-			return this.corona.create(params)
+			return this.corona
+				.create(params)
 				.then((data) => {
-					const {
-						id, district, state,
-					} = data;
+					const { id, phone_number, district, local_body, state } = data;
 					params.id = id;
 					this.user.create({
 						phone_number: data.phone_number,
@@ -108,8 +112,9 @@ export default class AccountService {
 				})
 				.catch(async (error) => {
 					Logger.error(error);
-					count += 1;
-					if (count > 5) {
+					let i = count;
+					i += 1;
+					if (i > 5) {
 						throw new Error('failed to create user');
 					}
 					await this.corona.refresh();
@@ -123,7 +128,9 @@ export default class AccountService {
 	async getAllUsers(parentId) {
 		await this.corona.authorize();
 		const users = await this.user.findAll({ phone_number: parentId });
-		if (users === null) throw new Error(`unable to finder user for  ${parentId}`);
+		if (users === null) {
+			throw new Error(`unable to finder user for  ${parentId}`);
+		}
 		const userId = users.pluck('id');
 		const dbUsers = [];
 		for (let i = 0; i < userId.length; i += 1) {
@@ -136,9 +143,16 @@ export default class AccountService {
 		const user = await this.answer.getLatest({ id: params.id });
 		const userProfile = await this.user.find({ id: params.id });
 		if (user === null) return { message: 'User not found' };
-		const obj = { user_id: params.id, user_number: params.parentId, district_id: userProfile.get('district') };
+		const obj = {
+			user_id: params.id,
+			user_number: params.parentId,
+			district_id: userProfile.get('district'),
+		};
 		if (params.status) obj.status = params.status;
 		await this.schedule.create(obj);
-		return { message: 'Volunteer has been notified and will get back to you as soon as possible' };
+		return {
+			message:
+				'Volunteer has been notified and will get back to you as soon as possible',
+		};
 	}
 }
